@@ -7,6 +7,15 @@ const { VueLoaderPlugin } = require('vue-loader')
 
 // export
 module.exports = {
+  resolve: {
+    // 경로에서 확장자를 따로 명시하지 않아도 오류가 안생김
+    extensions: ['.js', '.vue'],
+    // 경로별칭(Alias): ./이나 ../로 시작하는 경로를 별칭 ~ 로 만들어서 사용한다.
+    alias: {
+      '~': path.resolve(__dirname, 'src'),
+      'assets': path.resolve(__dirname, 'src/assets')
+    }
+  },
   // parcel main.js
   // 파일을 읽어들이기 시작하는 진입점 설정
   entry: './src/main.js',
@@ -25,15 +34,15 @@ module.exports = {
   module: {
     rules: [
       {
-      text: /\.vue$/,
-      use: ['vue-loader']
+        test: /\.vue$/,
+        use: ['vue-loader']
       },
       { // .scss로 끝나는 확장자를 찾는데 s는 있을 수도 없을 수도 있다.
         test: /\.s?css$/,
         use: [
           // 순서중요!
-          // vue확장자로 끝나는 파일들의 내부에서 style이라는 태그로 css 내용을 작성한 내용을
-          // 해석해서 동작시켜줄 수 있도록 도와준다.
+          // vue확장자로 끝나는 파일들의 내부에서 style이라는 태그로 css 내용을 
+          // 작성한 내용을 해석해서 동작시켜줄 수 있도록 도와준다.
           'vue-style-loader',
           // 아래 해석된 내용을 html파일에 삽입해줌
           'style-loader',
@@ -49,6 +58,13 @@ module.exports = {
         test: /\.js$/,
         use: [
           'babel-loader'
+        ]
+      },
+      { // png|jpe?g|gif|webp 확장가를 가진 파일들이 있으면 
+        // 브라우저에서 동작시킬 수 있도록 도와줌
+        test: /\.(png|jpe?g|gif|webp)$/,
+        use: [
+          'file-loader'
         ]
       }
     ]
